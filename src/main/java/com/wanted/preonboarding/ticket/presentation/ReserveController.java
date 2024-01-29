@@ -6,8 +6,8 @@ import com.wanted.preonboarding.ticket.domain.dto.request.FindPerformanceRequest
 import com.wanted.preonboarding.ticket.domain.dto.request.FindReservationRequest;
 import com.wanted.preonboarding.ticket.domain.dto.request.ReservePerformanceRequest;
 import com.wanted.preonboarding.ticket.domain.dto.response.FindReservationResponse;
+import com.wanted.preonboarding.ticket.domain.dto.response.ReservePerformanceResponse;
 import com.wanted.preonboarding.ticket.domain.entity.Performance;
-import com.wanted.preonboarding.ticket.domain.entity.Reservation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,11 +47,11 @@ public class ReserveController {
     }
 
     @PostMapping("/reserve")
-    public ResponseEntity<ResponseHandler<Reservation>> reserve(
+    public ResponseEntity<ResponseHandler<ReservePerformanceResponse>> reserve(
             @RequestBody @Valid final ReservePerformanceRequest reservePerformanceRequest
     ) {
         return ResponseEntity.ok()
-                .body(ResponseHandler.<Reservation>builder()
+                .body(ResponseHandler.<ReservePerformanceResponse>builder()
                         .statusCode(HttpStatus.OK)
                         .message("공연 예약을 성공했습니다.")
                         .data(ticketService.reserve(reservePerformanceRequest))

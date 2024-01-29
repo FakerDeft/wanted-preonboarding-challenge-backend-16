@@ -4,6 +4,7 @@ import com.wanted.preonboarding.ticket.domain.dto.request.FindPerformanceRequest
 import com.wanted.preonboarding.ticket.domain.dto.request.FindReservationRequest;
 import com.wanted.preonboarding.ticket.domain.dto.request.ReservePerformanceRequest;
 import com.wanted.preonboarding.ticket.domain.dto.response.FindReservationResponse;
+import com.wanted.preonboarding.ticket.domain.dto.response.ReservePerformanceResponse;
 import com.wanted.preonboarding.ticket.domain.entity.Performance;
 import com.wanted.preonboarding.ticket.domain.entity.Reservation;
 import com.wanted.preonboarding.ticket.exception.TicketException;
@@ -31,14 +32,16 @@ public class TicketService {
      */
     public FindReservationResponse findReservation(final FindReservationRequest findReservationRequest) {
 
-        final Reservation reservation = reservationRepository.findByMemberNameAndMemberPhoneNumber(
+        final Reservation reservationInfo = reservationRepository.findByMemberNameAndMemberPhoneNumber(
                         findReservationRequest.memberName(),
                         findReservationRequest.memberPhoneNumber())
                 .orElseThrow(() -> new TicketException.ReservationNotFoundException(findReservationRequest.memberName(), findReservationRequest.memberPhoneNumber()));
-        final Performance performance = performanceRepository.findById(reservation.getPerformanceId())
-                .orElseThrow(() -> new TicketException.PerformanceNotFoundException(reservation.getPerformanceId()));
+        log.info("예약 조회 성공 : {}", reservationInfo);
+        final Performance performanceInfo = performanceRepository.findById(reservationInfo.getPerformanceId())
+                .orElseThrow(() -> new TicketException.PerformanceNotFoundException(reservationInfo.getPerformanceId()));
+        log.info("공연 조회 성공 : {}", performanceInfo);
 
-        return FindReservationResponse.of(reservation, performance);
+        return FindReservationResponse.of(reservationInfo, performanceInfo);
     }
 
     /**
@@ -59,10 +62,10 @@ public class TicketService {
      * DB에 예약 정보 등록 후 예약 결과 리턴
      * 예약이 불가능하면 null 리턴
      */
-    public Reservation reserve(final ReservePerformanceRequest reservePerformanceRequest) {
-        log.info("performanceId ID => {}", reservePerformanceRequest.performanceId());
+    public ReservePerformanceResponse reserve(final ReservePerformanceRequest reservePerformanceRequest) {
         final Performance performanceInfo = performanceRepository.findById(reservePerformanceRequest.performanceId())
                 .orElseThrow(() -> new TicketException.PerformanceNotFoundException(reservePerformanceRequest.performanceId()));
+        log.info("공연 조회 성공 : {}", performanceInfo);
         final int performancePrice = performanceInfo.getPrice();
         final String enableReserve = performanceInfo.getIsReserve();
         final long calculateReservationPrice = calculateReservationPrice(
@@ -70,9 +73,12 @@ public class TicketService {
                 performancePrice,
                 reservePerformanceRequest.discount()
         );
+        log.info("최종 금액 계산 완료 : {}", calculateReservationPrice);
 
         if (enableReserve.equalsIgnoreCase("enable")) {
-            return reservationRepository.saveAndFlush(Reservation.of(reservePerformanceRequest, calculateReservationPrice));
+            final Reservation reservationInfo = reservationRepository.saveAndFlush(Reservation.of(reservePerformanceRequest, calculateReservationPrice));
+
+            return ReservePerformanceResponse.of(reservationInfo, performanceInfo);
         }
         return null;
     }
