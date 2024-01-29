@@ -1,6 +1,6 @@
 package com.wanted.preonboarding.ticket.domain.entity;
 
-import com.wanted.preonboarding.ticket.domain.dto.request.ReservationRequest;
+import com.wanted.preonboarding.ticket.domain.dto.request.ReservePerformanceRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int reservationId;
     @Column(columnDefinition = "BINARY(16)", nullable = false)
     private UUID performanceId;
     @Column(nullable = false)
@@ -37,19 +37,19 @@ public class Reservation {
     private String reservationStatus;
 
     public static Reservation of(
-            final ReservationRequest reservationRequest,
+            final ReservePerformanceRequest reservePerformanceRequest,
             final long calculateReservationPrice
     ) {
         return Reservation.builder()
-                .performanceId(reservationRequest.performanceId())
-                .memberName(reservationRequest.memberName())
-                .memberPhoneNumber(reservationRequest.memberPhoneNumber())
+                .performanceId(reservePerformanceRequest.performanceId())
+                .memberName(reservePerformanceRequest.memberName())
+                .memberPhoneNumber(reservePerformanceRequest.memberPhoneNumber())
                 .amount(calculateReservationPrice)
-                .discount(reservationRequest.discount())
-                .round(reservationRequest.round())
-                .gate(reservationRequest.gate())
-                .line(reservationRequest.line())
-                .seat(reservationRequest.seat())
+                .discount(reservePerformanceRequest.discount())
+                .round(reservePerformanceRequest.round())
+                .gate(reservePerformanceRequest.gate())
+                .line(reservePerformanceRequest.line())
+                .seat(reservePerformanceRequest.seat())
                 .build();
     }
 
