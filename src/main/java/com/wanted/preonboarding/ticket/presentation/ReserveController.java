@@ -1,32 +1,34 @@
 package com.wanted.preonboarding.ticket.presentation;
 
-import com.wanted.preonboarding.ticket.application.TicketSeller;
-import com.wanted.preonboarding.ticket.domain.dto.ReserveInfo;
+import com.wanted.preonboarding.global.domain.response.ResponseHandler;
+import com.wanted.preonboarding.ticket.application.TicketService;
+import com.wanted.preonboarding.ticket.domain.dto.request.ReservationRequest;
+import com.wanted.preonboarding.ticket.domain.entity.Reservation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
-
-@RestController
-@RequestMapping("/reserve")
 @RequiredArgsConstructor
+@RequestMapping("/api")
+@RestController
 public class ReserveController {
-    private final TicketSeller ticketSeller;
+    private final TicketService ticketService;
 
-    @PostMapping("/")
-    public boolean reservation() {
-        System.out.println("reservation");
+    @PostMapping("/reserve")
+    public ResponseEntity<ResponseHandler<Reservation>> reservation(
+            @RequestBody @Valid final ReservationRequest reservationRequest
+    ) {
 
-        return ticketSeller.reserve(ReserveInfo.builder()
-            .performanceId(UUID.fromString("4438a3e6-b01c-11ee-9426-0242ac180002"))
-            .reservationName("유진호")
-            .reservationPhoneNumber("010-1234-1234")
-            .reservationStatus("reserve")
-            .amount(200000)
-            .round(1)
-            .line('A')
-            .seat(1)
-            .build()
-        );
+        return ResponseEntity.ok()
+                .body(ResponseHandler.<Reservation>builder()
+                        .statusCode(HttpStatus.OK)
+                        .message("공연 예약을 성공했습니다.")
+                        .data(ticketService.reserve(reservationRequest))
+                        .build());
     }
 }
