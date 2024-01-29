@@ -20,6 +20,13 @@ public class TicketException extends RuntimeException {
         }
     }
 
+    public static class EnablePerformanceNotFoundException extends TicketException {
+
+        public EnablePerformanceNotFoundException(final String isReserve) {
+            super(String.format("예매 가능한 공연이 존재하지 않습니다. - request info { is_reserve : %s }", isReserve));
+        }
+    }
+
     public static class PerformanceNotFoundException extends TicketException {
 
         public PerformanceNotFoundException(final UUID performanceId) {
