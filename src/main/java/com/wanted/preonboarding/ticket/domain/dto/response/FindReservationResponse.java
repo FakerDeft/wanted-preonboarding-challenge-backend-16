@@ -16,18 +16,18 @@ public record FindReservationResponse(
         int seat // 좌석 정보
 ) {
     public static FindReservationResponse of(
-            final Reservation reservation,
-            final Performance performance
+            final Reservation reservationInfo,
+            final Performance performanceInfo
     ) {
         return new FindReservationResponse(
-                performance.getPerformanceId(),
-                reservation.getMemberName(),
-                reservation.getMemberPhoneNumber(),
-                performance.getPerformanceName(),
-                performance.getRound(),
-                reservation.getGate(),
-                reservation.getLine(),
-                reservation.getSeat()
+                performanceInfo.getPerformanceId(),
+                reservationInfo.getMemberName(),
+                reservationInfo.getMemberPhoneNumber(),
+                performanceInfo.getPerformanceName(),
+                performanceInfo.getRound(),
+                reservationInfo.getGate(),
+                reservationInfo.getLine(),
+                reservationInfo.getSeat()
         );
     }
 }
