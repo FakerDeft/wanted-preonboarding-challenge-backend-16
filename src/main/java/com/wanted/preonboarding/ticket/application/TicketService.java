@@ -31,11 +31,11 @@ public class TicketService {
      */
     public FindReservationResponse findReservation(final FindReservationRequest findReservationRequest) {
 
-        Reservation reservation = reservationRepository.findByMemberNameAndMemberPhoneNumber(
+        final Reservation reservation = reservationRepository.findByMemberNameAndMemberPhoneNumber(
                         findReservationRequest.memberName(),
                         findReservationRequest.memberPhoneNumber())
                 .orElseThrow(() -> new TicketException.ReservationNotFoundException(findReservationRequest.memberName(), findReservationRequest.memberPhoneNumber()));
-        Performance performance = performanceRepository.findById(reservation.getPerformanceId())
+        final Performance performance = performanceRepository.findById(reservation.getPerformanceId())
                 .orElseThrow(() -> new TicketException.PerformanceNotFoundException(reservation.getPerformanceId()));
 
         return FindReservationResponse.of(reservation, performance);
