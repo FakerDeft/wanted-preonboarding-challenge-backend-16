@@ -1,7 +1,8 @@
 package com.wanted.preonboarding.ticket.application;
 
 import com.wanted.preonboarding.ticket.domain.dto.PerformanceDTO;
-import com.wanted.preonboarding.ticket.domain.dto.request.ReservationRequest;
+import com.wanted.preonboarding.ticket.domain.dto.request.FindReservationRequest;
+import com.wanted.preonboarding.ticket.domain.dto.request.ReservePerformanceRequest;
 import com.wanted.preonboarding.ticket.domain.entity.Performance;
 import com.wanted.preonboarding.ticket.domain.entity.Reservation;
 import com.wanted.preonboarding.ticket.exception.TicketException;
@@ -33,6 +34,18 @@ public class TicketService {
     }
 
     /**
+     * [예약 조회 메서드]
+     * 회원의 이름과 핸드폰 번호로 예약 조회
+     * 예약 조회 후 결과 리턴
+     */
+    public Reservation findReservation(final FindReservationRequest findReservationRequest) {
+        return reservationRepository.findByMemberNameAndMemberPhoneNumber(
+                        findReservationRequest.memberName(),
+                        findReservationRequest.memberPhoneNumber())
+                .orElseThrow(() -> new TicketException.ReservationNotFoundException(findReservationRequest.memberName(), findReservationRequest.memberPhoneNumber()));
+    }
+
+    /**
      * [예약 메서드]
      * 요청 시 받아온 공연 ID로 해당 공연 정보 조회
      * 예약이 가능하다면
@@ -40,20 +53,20 @@ public class TicketService {
      * DB에 예약 정보 등록 후 예약 결과 리턴
      * 예약이 불가능하면 null 리턴
      */
-    public Reservation reserve(final ReservationRequest reservationRequest) {
-        log.info("reserveInfo ID => {}", reservationRequest.performanceId());
-        final Performance performanceInfo = performanceRepository.findById(reservationRequest.performanceId())
-                .orElseThrow(() -> new TicketException.PerformanceNotFoundException(reservationRequest.performanceId()));
+    public Reservation reserve(final ReservePerformanceRequest reservePerformanceRequest) {
+        log.info("performanceId ID => {}", reservePerformanceRequest.performanceId());
+        final Performance performanceInfo = performanceRepository.findById(reservePerformanceRequest.performanceId())
+                .orElseThrow(() -> new TicketException.PerformanceNotFoundException(reservePerformanceRequest.performanceId()));
         final int performancePrice = performanceInfo.getPrice();
         final String enableReserve = performanceInfo.getIsReserve();
         final long calculateReservationPrice = calculateReservationPrice(
-                reservationRequest.amount(),
+                reservePerformanceRequest.amount(),
                 performancePrice,
-                reservationRequest.discount()
+                reservePerformanceRequest.discount()
         );
 
         if (enableReserve.equalsIgnoreCase("enable")) {
-            return reservationRepository.saveAndFlush(Reservation.of(reservationRequest, calculateReservationPrice));
+            return reservationRepository.saveAndFlush(Reservation.of(reservePerformanceRequest, calculateReservationPrice));
         }
         return null;
     }
@@ -65,5 +78,4 @@ public class TicketService {
     ) {
         return amount - performancePrice - discount;
     }
-
 }
