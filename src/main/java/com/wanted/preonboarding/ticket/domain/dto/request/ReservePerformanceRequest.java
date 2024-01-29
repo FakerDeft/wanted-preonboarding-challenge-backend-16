@@ -2,7 +2,7 @@ package com.wanted.preonboarding.ticket.domain.dto.request;
 
 import java.util.UUID;
 
-public record ReservationRequest(
+public record ReservePerformanceRequest(
         UUID performanceId, // 공연 아이디
         String memberName, // 예약자 이름
         String memberPhoneNumber, // 예약자 폰 번호
