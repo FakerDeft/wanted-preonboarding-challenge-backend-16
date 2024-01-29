@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
-public class ReserveController {
+public class TicketController {
     private final TicketService ticketService;
 
     @GetMapping("/find-reservation")
