@@ -33,10 +33,10 @@ public class TicketService {
      */
     public FindReservationResponse findReservation(final FindReservationRequest findReservationRequest) {
 
-        final Reservation reservationInfo = reservationRepository.findByMemberNameAndMemberPhoneNumber(
-                        findReservationRequest.memberName(),
-                        findReservationRequest.memberPhoneNumber())
-                .orElseThrow(() -> new TicketException.ReservationNotFoundException(findReservationRequest.memberName(), findReservationRequest.memberPhoneNumber()));
+        final Reservation reservationInfo = reservationRepository.findByNameAndPhoneNumber(
+                        findReservationRequest.name(),
+                        findReservationRequest.phoneNumber())
+                .orElseThrow(() -> new TicketException.ReservationNotFoundException(findReservationRequest.name(), findReservationRequest.phoneNumber()));
         log.info("예약 조회 성공 : {}", reservationInfo);
         final Performance performanceInfo = performanceRepository.findById(reservationInfo.getPerformanceId())
                 .orElseThrow(() -> new TicketException.PerformanceNotFoundException(reservationInfo.getPerformanceId()));
@@ -73,6 +73,7 @@ public class TicketService {
      * 예약이 불가능하면 null 리턴
      */
     public ReservePerformanceResponse reserve(final ReservePerformanceRequest reservePerformanceRequest) {
+        log.info("예약 요청 : {}", reservePerformanceRequest);
         final Performance performanceInfo = performanceRepository.findById(reservePerformanceRequest.performanceId())
                 .orElseThrow(() -> new TicketException.PerformanceNotFoundException(reservePerformanceRequest.performanceId()));
         log.info("공연 조회 성공 : {}", performanceInfo);

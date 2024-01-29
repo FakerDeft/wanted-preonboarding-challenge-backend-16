@@ -12,7 +12,7 @@ public record FindPerformanceResponse(
 ) {
     public static FindPerformanceResponse of(final Performance enablePerformance) {
         return new FindPerformanceResponse(
-                enablePerformance.getPerformanceName(),
+                enablePerformance.getName(),
                 enablePerformance.getRound(),
                 enablePerformance.getStart_date(),
                 enablePerformance.getIsReserve()

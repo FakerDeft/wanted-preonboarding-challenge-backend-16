@@ -11,12 +11,12 @@ public class TicketException extends RuntimeException {
     public static class ReservationNotFoundException extends TicketException {
 
         public ReservationNotFoundException(
-                final String memberName,
-                final String memberPhoneNumber
+                final String name,
+                final String phoneNumber
         ) {
-            super(String.format("조회하는 예약이 존재하지 않습니다. - request info { member_name : %s, member_phone_number : %s }",
-                    memberName,
-                    memberPhoneNumber));
+            super(String.format("조회하는 예약이 존재하지 않습니다. - request info { name : %s, phone_number : %s }",
+                    name,
+                    phoneNumber));
         }
     }
 

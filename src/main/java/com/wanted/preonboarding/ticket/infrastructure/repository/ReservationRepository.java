@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
-    Optional<Reservation> findByMemberNameAndMemberPhoneNumber(String name, String phoneNumber);
+    Optional<Reservation> findByNameAndPhoneNumber(String name, String phoneNumber);
 }

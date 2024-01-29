@@ -18,13 +18,13 @@ import java.util.UUID;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int reservationId;
+    private int id;
     @Column(columnDefinition = "BINARY(16)", nullable = false)
     private UUID performanceId;
     @Column(nullable = false)
-    private String memberName;
+    private String name;
     @Column(nullable = false)
-    private String memberPhoneNumber;
+    private String phoneNumber;
     @Column(nullable = false)
     private long amount;
     private long discount;
@@ -42,14 +42,15 @@ public class Reservation {
     ) {
         return Reservation.builder()
                 .performanceId(reservePerformanceRequest.performanceId())
-                .memberName(reservePerformanceRequest.memberName())
-                .memberPhoneNumber(reservePerformanceRequest.memberPhoneNumber())
+                .name(reservePerformanceRequest.name())
+                .phoneNumber(reservePerformanceRequest.phoneNumber())
                 .amount(calculateReservationPrice)
                 .discount(reservePerformanceRequest.discount())
                 .round(reservePerformanceRequest.round())
                 .gate(reservePerformanceRequest.gate())
                 .line(reservePerformanceRequest.line())
                 .seat(reservePerformanceRequest.seat())
+                .reservationStatus(reservePerformanceRequest.reservationStatus())
                 .build();
     }
 

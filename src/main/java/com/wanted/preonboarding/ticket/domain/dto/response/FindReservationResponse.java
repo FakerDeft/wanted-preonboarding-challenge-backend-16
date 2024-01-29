@@ -20,10 +20,10 @@ public record FindReservationResponse(
             final Performance performanceInfo
     ) {
         return new FindReservationResponse(
-                performanceInfo.getPerformanceId(),
-                reservationInfo.getMemberName(),
-                reservationInfo.getMemberPhoneNumber(),
-                performanceInfo.getPerformanceName(),
+                performanceInfo.getId(),
+                reservationInfo.getName(),
+                reservationInfo.getPhoneNumber(),
+                performanceInfo.getName(),
                 performanceInfo.getRound(),
                 reservationInfo.getGate(),
                 reservationInfo.getLine(),
