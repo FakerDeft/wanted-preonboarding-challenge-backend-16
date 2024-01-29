@@ -3,6 +3,7 @@ package com.wanted.preonboarding.ticket.application;
 import com.wanted.preonboarding.ticket.domain.dto.request.FindPerformanceRequest;
 import com.wanted.preonboarding.ticket.domain.dto.request.FindReservationRequest;
 import com.wanted.preonboarding.ticket.domain.dto.request.ReservePerformanceRequest;
+import com.wanted.preonboarding.ticket.domain.dto.response.FindPerformanceResponse;
 import com.wanted.preonboarding.ticket.domain.dto.response.FindReservationResponse;
 import com.wanted.preonboarding.ticket.domain.dto.response.ReservePerformanceResponse;
 import com.wanted.preonboarding.ticket.domain.entity.Performance;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -22,7 +24,6 @@ import java.util.List;
 public class TicketService {
     private final PerformanceRepository performanceRepository;
     private final ReservationRepository reservationRepository;
-    private final long totalAmount = 0L;
 
     /**
      * [예약 조회 메서드]
@@ -49,9 +50,18 @@ public class TicketService {
      * 예매 가능 여부('enable')로 조회
      * 조회 후 결과 리스트 리턴
      */
-    public List<Performance> getAllPerformanceInfoList(final FindPerformanceRequest findPerformanceRequest) {
-        return performanceRepository.findByIsReserve(findPerformanceRequest.isReserve())
+    public List<FindPerformanceResponse> findEnablePerformanceList(final FindPerformanceRequest findPerformanceRequest) {
+        final List<Performance> enablePerformances = performanceRepository.findByIsReserve(findPerformanceRequest.isReserve())
                 .orElseThrow(() -> new TicketException.EnablePerformanceNotFoundException(findPerformanceRequest.isReserve()));
+        log.info("예매 가능한 공연 리스트 조회 성공 : {}", enablePerformances);
+        final List<FindPerformanceResponse> findPerformances = new ArrayList<>();
+
+        for (int i = 0; i < enablePerformances.size(); i++) {
+            findPerformances.add(i, FindPerformanceResponse.of(enablePerformances.get(i)));
+        }
+        log.info("예매 가능한 공연 리스트 : {}", findPerformances);
+
+        return findPerformances;
     }
 
     /**

@@ -5,9 +5,9 @@ import com.wanted.preonboarding.ticket.application.TicketService;
 import com.wanted.preonboarding.ticket.domain.dto.request.FindPerformanceRequest;
 import com.wanted.preonboarding.ticket.domain.dto.request.FindReservationRequest;
 import com.wanted.preonboarding.ticket.domain.dto.request.ReservePerformanceRequest;
+import com.wanted.preonboarding.ticket.domain.dto.response.FindPerformanceResponse;
 import com.wanted.preonboarding.ticket.domain.dto.response.FindReservationResponse;
 import com.wanted.preonboarding.ticket.domain.dto.response.ReservePerformanceResponse;
-import com.wanted.preonboarding.ticket.domain.entity.Performance;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,14 +35,14 @@ public class ReserveController {
     }
 
     @GetMapping("/find-performance")
-    public ResponseEntity<ResponseHandler<List<Performance>>> findReservation(
+    public ResponseEntity<ResponseHandler<List<FindPerformanceResponse>>> findReservation(
             @RequestBody @Valid final FindPerformanceRequest findPerformanceRequest
     ) {
         return ResponseEntity.ok()
-                .body(ResponseHandler.<List<Performance>>builder()
+                .body(ResponseHandler.<List<FindPerformanceResponse>>builder()
                         .statusCode(HttpStatus.OK)
                         .message("예매 가능한 공연 리스트를 찾았습니다.")
-                        .data(ticketService.getAllPerformanceInfoList(findPerformanceRequest))
+                        .data(ticketService.findEnablePerformanceList(findPerformanceRequest))
                         .build());
     }
 

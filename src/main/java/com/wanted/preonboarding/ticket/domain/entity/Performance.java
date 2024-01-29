@@ -1,5 +1,6 @@
 package com.wanted.preonboarding.ticket.domain.entity;
 
+import com.wanted.preonboarding.ticket.domain.dto.PerformanceType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,9 +22,9 @@ public class Performance {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
-    private UUID id;
+    private UUID performanceId;
     @Column(nullable = false)
-    private String name;
+    private String performanceName;
     @Column(nullable = false)
     private int price;
     @Column(nullable = false)
@@ -35,4 +36,6 @@ public class Performance {
     @Column(nullable = false, name = "is_reserve", columnDefinition = "varchar default 'disable'")
     private String isReserve;
 
+    @Enumerated(EnumType.STRING)
+    private PerformanceType performanceType;
 }
