@@ -1,16 +1,12 @@
 package com.wanted.preonboarding.ticket.domain.entity;
 
-import com.wanted.preonboarding.ticket.domain.dto.ReserveInfo;
+import com.wanted.preonboarding.ticket.domain.dto.request.ReservationRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Entity
@@ -23,28 +19,38 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(columnDefinition = "BINARY(16)", nullable = false, name = "performance_id")
+    @Column(columnDefinition = "BINARY(16)", nullable = false)
     private UUID performanceId;
     @Column(nullable = false)
-    private String name;
-    @Column(nullable = false, name = "phone_number")
-    private String phoneNumber;
+    private String memberName;
+    @Column(nullable = false)
+    private String memberPhoneNumber;
+    @Column(nullable = false)
+    private long amount;
+    private long discount;
     @Column(nullable = false)
     private int round;
     private int gate;
     private char line;
     private int seat;
+    @Column(nullable = false)
+    private String reservationStatus;
 
-    public static Reservation of(ReserveInfo info) {
+    public static Reservation of(
+            final ReservationRequest reservationRequest,
+            final long calculateReservationPrice
+    ) {
         return Reservation.builder()
-            .performanceId(info.getPerformanceId())
-            .name(info.getReservationName())
-            .phoneNumber(info.getReservationPhoneNumber())
-            .round(info.getRound())
-            .gate(1)
-            .line(info.getLine())
-            .seat(info.getSeat())
-            .build();
+                .performanceId(reservationRequest.performanceId())
+                .memberName(reservationRequest.memberName())
+                .memberPhoneNumber(reservationRequest.memberPhoneNumber())
+                .amount(calculateReservationPrice)
+                .discount(reservationRequest.discount())
+                .round(reservationRequest.round())
+                .gate(reservationRequest.gate())
+                .line(reservationRequest.line())
+                .seat(reservationRequest.seat())
+                .build();
     }
 
 }
